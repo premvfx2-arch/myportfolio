@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PremVfx Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #050505;
+            color: #ffffff;
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #3b82f6;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #2563eb;
+        }
+
+        /* Custom Cursor */
+        #cursor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #3b82f6;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s, background-color 0.3s, border-color 0.3s;
+            mix-blend-mode: difference;
+        }
+
+        #cursor.hovered {
+            width: 50px;
+            height: 50px;
+            background-color: rgba(59, 130, 246, 0.2);
+            border-color: #60a5fa;
+            backdrop-filter: blur(2px);
+        }
+
+        /* Gradient Text */
+        .text-gradient {
+            background: linear-gradient(to right, #3b82f6, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Card Hover Effects */
+        .project-card {
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            display: block;
+            text-decoration: none;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px -10px rgba(59, 130, 246, 0.3);
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+
+        .project-card:hover .card-image {
+            transform: scale(1.1);
+        }
+
+        .card-image {
+            transition: transform 0.6s ease;
+        }
+
+        /* Sidebar Link Hover */
+        .nav-link {
+            position: relative;
+            transition: color 0.3s;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: #3b82f6;
+            transition: width 0.3s;
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* Accordion Animation */
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        .accordion-content.open {
+            max-height: 400px;
+        }
+
+        /* Floating Animation for Hero Elements */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* View Project Overlay */
+        .view-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(59, 130, 246, 0.2);
+            opacity: 0;
+            transition: opacity 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        .project-card:hover .view-overlay {
+            opacity: 1;
+        }
+
+        .view-badge {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            padding: 10px 20px;
+            border-radius: 30px;
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+            transform: translateY(10px);
+            transition: transform 0.3s;
+        }
+
+        .project-card:hover .view-badge {
+            transform: translateY(0);
+        }
+
+        /* Dropdown item hover */
+        .dropdown-item {
+            transition: color 0.2s, transform 0.2s;
+        }
+        .dropdown-item:hover {
+            transform: translateX(5px);
+        }
+
+        /* Graphic Design Card Styles */
+        .graphic-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            display: block;
+            text-decoration: none;
+        }
+
+        .graphic-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .graphic-card:hover img {
+            transform: scale(1.1);
+        }
+
+        .graphic-card .overlay-info {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.7), transparent);
+            z-index: 10;
+        }
+
+        .graphic-card .year-badge {
+            font-size: 12px;
+            color: #9ca3af;
+            font-weight: 500;
+        }
+
+        .graphic-card .title-badge {
+            font-size: 12px;
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        /* Video Card Styles */
+        .video-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            display: block;
+            text-decoration: none;
+        }
+
+        .video-card video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .video-card .overlay-info {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.7), transparent);
+            z-index: 10;
+        }
+
+        .video-card .year-badge {
+            font-size: 12px;
+            color: #9ca3af;
+            font-weight: 500;
+        }
+
+        .video-card .title-badge {
+            font-size: 12px;
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .video-card .play-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: rgba(59, 130, 246, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.3s;
+        }
+
+        .video-card:hover .play-icon {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        .video-card .play-icon i {
+            color: white;
+            font-size: 20px;
+            margin-left: 4px;
+        }
+
+        /* Brand Guidelines Masonry */
+        .masonry-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .masonry-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .masonry-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .masonry-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .masonry-item.tall {
+            grid-row: span 2;
+        }
+
+        .masonry-item.wide {
+            grid-column: span 2;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-blue-500 selection:text-white">
+
+    <!-- Custom Cursor -->
+    <div id="cursor"></div>
+
+    <div class="flex min-h-screen relative">
+        
+        <!-- Left Sidebar (Fixed) -->
+        <aside class="fixed left-0 top-0 h-full w-64 bg-[#0a0a0a] border-r border-white/10 hidden md:flex flex-col justify-between p-8 z-40">
+            <!-- Logo Area -->
+            <div class="flex items-center gap-3 cursor-pointer hover-trigger">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-500 to-purple-600 flex items-center justify-center overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&q=80" alt="Prem" class="w-full h-full object-cover">
+                </div>
+                <h1 class="text-xl font-bold tracking-wide">Prem</h1>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="flex flex-col gap-8">
+                <a href="#" class="nav-link flex items-center gap-4 text-gray-400 hover:text-white hover-trigger group">
+                    <i class="fas fa-home text-lg group-hover:text-blue-500 transition-colors"></i>
+                    <span class="text-lg">Home</span>
+                </a>
+                <a href="#" class="nav-link flex items-center gap-4 text-gray-400 hover:text-white hover-trigger group">
+                    <i class="fas fa-user text-lg group-hover:text-blue-500 transition-colors"></i>
+                    <span class="text-lg">About Me</span>
+                </a>
+                <a href="#" class="nav-link flex items-center gap-4 text-gray-400 hover:text-white hover-trigger group">
+                    <i class="fas fa-envelope text-lg group-hover:text-blue-500 transition-colors"></i>
+                    <span class="text-lg">Contact</span>
+                </a>
+
+                <!-- Dropdowns -->
+                <div class="flex flex-col gap-4 mt-4">
+                    <!-- Websites Dropdown -->
+                    <div class="group cursor-pointer hover-trigger" onclick="toggleAccordion('websites')">
+                        <div class="flex items-center justify-between text-gray-400 hover:text-white transition-colors">
+                            <span class="text-lg">Websites</span>
+                            <i id="icon-websites" class="fas fa-chevron-down text-xs transition-transform duration-300"></i>
+                        </div>
+                        <div id="acc-websites" class="accordion-content pl-4 mt-2 flex flex-col gap-2 text-sm text-gray-500">
+                            <a href="#" class="dropdown-item hover:text-blue-400">E-Commerce</a>
+                            <a href="#" class="dropdown-item hover:text-blue-400">Business</a>
+                            <a href="#" class="dropdown-item hover:text-blue-400">Educational</a>
+                            <a href="#" class="dropdown-item hover:text-blue-400">Portfolio</a>
+                            <a href="#" class="dropdown-item hover:text-blue-400">Healthcare</a>
+                            <a href="#" class="dropdown-item hover:text-blue-400">Agency</a>
+                        </div>
+                    </div>
+
+                    <!-- Graphic Designs Dropdown -->
+                    <div class="group cursor-pointer hover-trigger" onclick="toggleAccordion('graphics')">
+                        <div class="flex items-center justify-between text-gray-400 hover:text-white transition-colors">
+                            <span class="text-lg">Graphic designs</span>
+                            <i id="icon-graphics" class="fas fa-chevron-down text-xs transition-transform duration-300"></i>
+                        </div>
+                        <div id="acc-graphics" class="accordion-content pl-4 mt-2 flex flex-col gap-2 text-sm text-gray-500">
+                            <a href="#" class="dropdown-item hover:text-blue-400">Posters</a>
+                            <a href="#" class="dropdown-item hover:text-blue-400">Brochures & Flyers</a>
+                            <a href="#" class="dropdown-item hover:text-blue-400">Logos Designs</a>
+                            <a href="#" class="dropdown-item hover:text-blue-400">Business Cards</a>
+                            <a href="#" class="dropdown-item hover:text-blue-400">Insta Posts</a>
+                            <a href="#" class="dropdown-item hover:text-blue-400">Brand Guidelines</a>
+                        </div>
+                    </div>
+
+                    <!-- Video Edits Dropdown -->
+                    <div class="group cursor-pointer hover-trigger" onclick="toggleAccordion('video')">
+                        <div class="flex items-center justify-between text-gray-400 hover:text-white transition-colors">
+                            <span class="text-lg">Video Edits</span>
+                            <i id="icon-video" class="fas fa-chevron-down text-xs transition-transform duration-300"></i>
+                        </div>
+                        <div id="acc-video" class="accordion-content pl-4 mt-2 flex flex-col gap-2 text-sm text-gray-500">
+                            <a href="#" class="dropdown-item hover:text-blue-400">Promotional</a>
+                            <a href="#" class="dropdown-item hover:text-blue-400">Ad Videos</a>
+                            <a href="#" class="dropdown-item hover:text-blue-400">Youtube Videos</a>
+                            <a href="#" class="dropdown-item hover:text-blue-400">Insta Reels</a>
+                            <a href="#" class="dropdown-item hover:text-blue-400">Real Estate</a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Socials / Footer -->
+            <div class="flex gap-4 text-gray-500">
+                <a href="#" class="hover:text-white hover-trigger transition-colors"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="hover:text-white hover-trigger transition-colors"><i class="fab fa-dribbble"></i></a>
+                <a href="#" class="hover:text-white hover-trigger transition-colors"><i class="fab fa-linkedin"></i></a>
+            </div>
+        </aside>
+
+        <!-- Main Content (Scrollable) -->
+        <main class="md:ml-64 w-full min-h-screen p-8 md:p-16 relative">
+            
+            <!-- Top Navigation Bar -->
+            <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-16 gap-4">
+                <button class="md:hidden text-white text-2xl hover-trigger"><i class="fas fa-bars"></i></button>
+
+                <nav class="hidden md:flex gap-8 text-sm font-medium text-gray-400">
+                    <a href="#" class="hover:text-white transition-colors hover-trigger">Home</a>
+                    <a href="#" class="hover:text-white transition-colors hover-trigger">MyWorks</a>
+                    <a href="#" class="hover:text-white transition-colors hover-trigger">About me</a>
+                    <a href="#" class="hover:text-white transition-colors hover-trigger">My Projects</a>
+                    <a href="#" class="hover:text-white transition-colors hover-trigger">Contact</a>
+                </nav>
+
+                <a href="#contact" class="px-6 py-2 rounded-full border border-blue-500/50 text-blue-400 hover:bg-blue-500 hover:text-white transition-all duration-300 hover-trigger text-sm font-semibold tracking-wide shadow-[0_0_15px_rgba(59,130,246,0.3)] hover:shadow-[0_0_25px_rgba(59,130,246,0.6)]">
+                    Let's Connect
+                </a>
+            </header>
+
+            <!-- Hero / Intro Section -->
+            <section class="mb-20 max-w-4xl">
+                <h1 class="text-6xl md:text-8xl font-bold mb-8 tracking-tight floating">
+                    <span class="text-gradient">Portfolio</span>
+                </h1>
+                
+                <div class="space-y-6 text-gray-300 text-lg leading-relaxed">
+                    <p>
+                        I'm <strong class="text-white">PremVfx</strong>, an enthusiastic graphic and UI/UX designer based in Hyderabad, Telangana. As a fresher with hands-on training in Figma, Adobe Creative Suite, and Framer, I'm eager to deliver pixel-perfect visuals and intuitive user experiences.
+                    </p>
+                    
+                    <div class="mt-8">
+                        <h3 class="text-white font-semibold text-xl mb-2">Design Passion</h3>
+                        <p class="text-gray-400">
+                            Great design starts with empathy—crafting seamless interfaces and vibrant graphics that solve real problems. Inspired by Hyderabad's booming tech ecosystem, I focus on mobile-first UIs, wireframing, prototyping, and branding for apps, websites, and creative projects like enhanced site layouts.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Websites Section -->
+            <section class="mb-20">
+                <h2 class="text-3xl font-bold mb-10 border-l-4 border-blue-500 pl-4">Websites</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Website Card 1 -->
+                    <a href="car-decors.html" class="project-card rounded-2xl overflow-hidden group hover-trigger">
+                        <div class="p-4 flex justify-between items-center text-sm text-gray-400 border-b border-white/5 bg-white/5">
+                            <span>2025</span>
+                            <span class="font-medium text-white">Car Decors</span>
+                        </div>
+                        <div class="h-48 overflow-hidden relative">
+                            <div class="view-overlay">
+                                <span class="view-badge">View Project</span>
+                            </div>
+                            <img src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=800&q=80" alt="Car Decors" class="card-image w-full h-full object-cover">
+                        </div>
+                        <div class="p-4 flex justify-between items-center bg-[#0f0f0f]">
+                            <span class="text-blue-400 text-sm font-medium">E-Commerce</span>
+                            <div class="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-blue-500 group-hover:border-blue-500 transition-colors">
+                                <i class="fas fa-globe text-xs text-gray-400 group-hover:text-white"></i>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- Website Card 2 -->
+                    <a href="joshna-infra.html" class="project-card rounded-2xl overflow-hidden group hover-trigger">
+                        <div class="p-4 flex justify-between items-center text-sm text-gray-400 border-b border-white/5 bg-white/5">
+                            <span>2025</span>
+                            <span class="font-medium text-white">Joshna Infra</span>
+                        </div>
+                        <div class="h-48 overflow-hidden relative">
+                            <div class="view-overlay">
+                                <span class="view-badge">View Project</span>
+                            </div>
+                            <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80" alt="Joshna Infra" class="card-image w-full h-full object-cover">
+                        </div>
+                        <div class="p-4 flex justify-between items-center bg-[#0f0f0f]">
+                            <span class="text-blue-400 text-sm font-medium">Business</span>
+                            <div class="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-blue-500 group-hover:border-blue-500 transition-colors">
+                                <i class="fas fa-globe text-xs text-gray-400 group-hover:text-white"></i>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- Website Card 3 -->
+                    <a href="edulearn-pro.html" class="project-card rounded-2xl overflow-hidden group hover-trigger">
+                        <div class="p-4 flex justify-between items-center text-sm text-gray-400 border-b border-white/5 bg-white/5">
+                            <span>2025</span>
+                            <span class="font-medium text-white">EduLearn Pro</span>
+                        </div>
+                        <div class="h-48 overflow-hidden relative">
+                            <div class="view-overlay">
+                                <span class="view-badge">View Project</span>
+                            </div>
+                            <img src="https://images.unsplash.com/photo-1501504905252-473c47e087f8?auto=format&fit=crop&w=800&q=80" alt="EduLearn Pro" class="card-image w-full h-full object-cover">
+                        </div>
+                        <div class="p-4 flex justify-between items-center bg-[#0f0f0f]">
+                            <span class="text-blue-400 text-sm font-medium">Educational</span>
+                            <div class="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-blue-500 group-hover:border-blue-500 transition-colors">
+                                <i class="fas fa-globe text-xs text-gray-400 group-hover:text-white"></i>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- Website Card 4 -->
+                    <a href="neon-dashboard.html" class="project-card rounded-2xl overflow-hidden group hover-trigger">
+                        <div class="p-4 flex justify-between items-center text-sm text-gray-400 border-b border-white/5 bg-white/5">
+                            <span>2024</span>
+                            <span class="font-medium text-white">Neon Dashboard</span>
+                        </div>
+                        <div class="h-48 overflow-hidden relative">
+                            <div class="view-overlay">
+                                <span class="view-badge">View Project</span>
+                            </div>
+                            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80" alt="Neon Dashboard" class="card-image w-full h-full object-cover">
+                        </div>
+                        <div class="p-4 flex justify-between items-center bg-[#0f0f0f]">
+                            <span class="text-blue-400 text-sm font-medium">SaaS</span>
+                            <div class="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-blue-500 group-hover:border-blue-500 transition-colors">
+                                <i class="fas fa-globe text-xs text-gray-400 group-hover:text-white"></i>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- Website Card 5 -->
+                    <a href="zenith-architecture.html" class="project-card rounded-2xl overflow-hidden group hover-trigger">
+                        <div class="p-4 flex justify-between items-center text-sm text-gray-400 border-b border-white/5 bg-white/5">
+                            <span>2024</span>
+                            <span class="font-medium text-white">Zenith Architecture</span>
+                        </div>
+                        <div class="h-48 overflow-hidden relative">
+                            <div class="view-overlay">
+                                <span class="view-badge">View Project</span>
+                            </div>
+                            <img src="https://images.unsplash.com/photo-1600607686527-6fb886090705?auto=format&fit=crop&w=800&q=80" alt="Zenith Architecture" class="card-image w-full h-full object-cover">
+                        </div>
+                        <div class="p-4 flex justify-between items-center bg-[#0f0f0f]">
+                            <span class="text-blue-400 text-sm font-medium">Portfolio</span>
+                            <div class="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-blue-500 group-hover:border-blue-500 transition-colors">
+                                <i class="fas fa-globe text-xs text-gray-400 group-hover:text-white"></i>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- Website Card 6 -->
+                    <a href="foodiehub.html" class="project-card rounded-2xl overflow-hidden group hover-trigger">
+                        <div class="p-4 flex justify-between items-center text-sm text-gray-400 border-b border-white/5 bg-white/5">
+                            <span>2024</span>
+                            <span class="font-medium text-white">FoodieHub</span>
+                        </div>
+                        <div class="h-48 overflow-hidden relative">
+                            <div class="view-overlay">
+                                <span class="view-badge">View Project</span>
+                            </div>
+                            <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=800&q=80" alt="FoodieHub" class="card-image w-full h-full object-cover">
+                        </div>
+                        <div class="p-4 flex justify-between items-center bg-[#0f0f0f]">
+                            <span class="text-blue-400 text-sm font-medium">Food Delivery</span>
+                            <div class="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-blue-500 group-hover:border-blue-500 transition-colors">
+                                <i class="fas fa-globe text-xs text-gray-400 group-hover:text-white"></i>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Graphic Designs Section -->
+            <section class="mb-20">
+                <h2 class="text-3xl font-bold mb-2 border-l-4 border-purple-500 pl-4">Graphic Designs</h2>
+                
+                <!-- Posters Subsection -->
+                <div class="mt-10">
+                    <p class="text-gray-400 text-lg mb-6 pl-5">Posters</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Poster 1 -->
+                        <a href="neon-nights.html" class="graphic-card h-64 hover-trigger">
+                            <div class="overlay-info">
+                                <span class="year-badge">2025</span>
+                                <span class="title-badge">Poster</span>
+                            </div>
+                            <img src="https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=800&q=80" alt="Neon Nights">
+                        </a>
+                        <!-- Poster 2 -->
+                        <a href="summer-vibes.html" class="graphic-card h-64 hover-trigger">
+                            <div class="overlay-info">
+                                <span class="year-badge">2025</span>
+                                <span class="title-badge">Poster</span>
+                            </div>
+                            <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80" alt="Summer Vibes">
+                        </a>
+                        <!-- Poster 3 -->
+                        <a href="tech-conference.html" class="graphic-card h-64 hover-trigger">
+                            <div class="overlay-info">
+                                <span class="year-badge">2024</span>
+                                <span class="title-badge">Poster</span>
+                            </div>
+                            <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=800&q=80" alt="Tech Conference">
+                        </a>
+                        <!-- Poster 4 -->
+                        <a href="music-festival.html" class="graphic-card h-64 hover-trigger">
+                            <div class="overlay-info">
+                                <span class="year-badge">2024</span>
+                                <span class="title-badge">Poster</span>
+                            </div>
+                            <img src="https://images.unsplash.com/photo-1459749411175-04bf5292ceea?auto=format&fit=crop&w=800&q=80" alt="Music Festival">
+                        </a>
+                        <!-- Poster 5 -->
+                        <a href="eco-friendly.html" class="graphic-card h-64 hover-trigger">
+                            <div class="overlay-info">
+                                <span class="year-badge">2024</span>
+                                <span class="title-badge">Poster</span>
+                            </div>
+                            <img src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=800&q=80" alt="Eco Friendly">
+                        </a>
+                        <!-- Poster 6 -->
+                        <a href="art-exhibition.html" class="graphic-card h-64 hover-trigger">
+                            <div class="overlay-info">
+                                <span class="year-badge">2023</span>
+                                <span class="title-badge">Poster</span>
+                            </div>
+                            <img src="https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?auto=format&fit=crop&w=800&q=80" alt="Art Exhibition">
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Brochures & Flyers Subsection -->
+                <div class="mt-16">
+                    <p class="text-gray-400 text-lg mb-6 pl-5">Brochures & Flyers</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Brochure 1 -->
+                        <a href="brochure-1.html" class="graphic-card h-64 hover-trigger">
+                            <div class="overlay-info">
+                                <span class="year-badge">2025</span>
+                                <span class="title-badge">Brochure</span>
+                            </div>
+                            <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80" alt="Brochure 1">
+                        </a>
+                        <!-- Brochure 2 -->
+                        <a href="brochure-2.html" class="graphic-card h-64 hover-trigger">
+                            <div class="overlay-info">
+                                <span class="year-badge">2025</span>
+                                <span class="title-badge">Brochure</span>
+                            </div>
+                            <img src="https://images.unsplash.com/photo-1586075010923-2dd4570fb338?auto=format&fit=crop&w=800&q=80" alt="Brochure 2">
+                        </a>
+                        <!-- Brochure 3 -->
+                        <a href="flyer-1.html" class="graphic-card h-64 hover-trigger">
+                            <div class="overlay-info">
+                                <span class="year-badge">2024</span>
+                                <span class="title-badge">Flyer</span>
+                            </div>
+                            <img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=800&q=80" alt="Flyer 1">
+                        </a>
+                        <!-- Brochure 4 -->
+                        <a href="flyer-2.html" class="graphic-card h-64 hover-trigger">
+                            <div class="overlay-info">
+                                <span class="year-badge">2024</span>
+                                <span class="title-badge">Flyer</span>
+                            </div>
+                            <img src="https://images.unsplash.com/photo-1558655146-9f40138edfeb?auto=format&fit=crop&w=800&q=80" alt="Flyer 2">
+                        </a>
+                        <!-- Brochure 5 -->
+                        <a href="brochure-3.html" class="graphic-card h-64 hover-trigger">
+                            <div class="overlay-info">
+                                <span class="year-badge">2024</span>
+                                <span class="title-badge">Brochure</span>
+                            </div>
+                            <img src="https://images.unsplash.com/photo-1600607687644-c7171b42498f?auto=format&fit=crop&w=800&q=80" alt="Brochure 3">
+                        </a>
+                        <!-- Brochure 6 -->
+                        <a href="flyer-3.html" class="graphic-card h-64 hover-trigger">
+                            <div class="overlay-info">
+                                <span class="year-badge">2023</span>
+                                <span class="title-badge">Flyer</span>
+                            </div>
+                            <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=800&q=80" alt="Flyer 3">
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Logo Designs Subsection -->
+                <div class="mt-16">
+                    <p class="text-gray-400 text-lg mb-6 pl-5">Logo Designs</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <!-- Logo 1 -->
+                        <a href="logo-1.html" class="graphic-card h-48 hover-trigger">
+                            <div class="overlay-info">
+                                <span class="year-badge">2025</span>
+                                <span class="title-badge">Logo</span>
+                            </div>
+                            <img src="https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&w=800&q=80" alt="Logo 1">
+                        </a>
+                        <!-- Logo 2 -->
+                        <a href="logo-2.html" class="graphic-card h-48 hover-trigger">
+                            <div class="overlay-info">
+                                <span class="year-badge">2025</span>
+                                <span class="title-badge">Logo</span>
+                            </div>
+                            <img src="https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?auto=format&fit=crop&w=800&q=80" alt="Logo 2">
+                        </a>
+                        <!-- Logo 3 -->
+                        <a href="logo-3.html" class="graphic-card h-48 hover-trigger">
+                            <div class="overlay-info">
+                                <span class="year-badge">2024</span>
+                                <span class="title-badge">Logo</span>
+                            </div>
+                            <img src="https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?auto=format&fit=crop&w=800&q=80" alt="Logo 3">
+                        </a>
+                        <!-- Logo 4 -->
+                        <a href="logo-4.html" class="graphic-card h-48 hover-trigger">
+                            <div class="overlay-info">
+                                <span class="year-badge">2024</span>
+                                <span class="title-badge">Logo</span>
+                            </div>
+                            <img src="https://images.unsplash.com/photo-1599305445671-ac291c95aaa9?auto=format&fit=crop&w=800&q=80" alt="Logo 4">
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Business Cards Subsection -->
+                <div class="mt-16">
+                    <p class="text-gray-400 text-lg mb-6 pl-5">Business Cards</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <!-- Business Card 1 -->
+                        <a href="business-card-1.html" class="graphic-card h-48 hover-trigger">
+                            <div class="overlay-info">
+                                <span class="year-badge">2025</span>
+                                <span class="title-badge">Business Card</span>
+                            </div>
+                            <img src="https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&w=800&q=80" alt="Business Card 1">
+                        </a>
+                        <!-- Business Card 2 -->
+                        <a href="business-card-2.html" class="graphic-card h-48 hover-trigger">
+                            <div class="overlay-info">
+                                <span class="year-badge">2025</span>
+                                <span class="title-badge">Business Card</span>
+                            </div>
+                            <img src="https://images.unsplash.com/photo-1606293926075-69a00febf780?auto=format&fit=crop&w=800&q=80" alt="Business Card 2">
+                        </a>
+                        <!-- Business Card 3 -->
+                        <a href="business-card-3.html" class="graphic-card h-48 hover-trigger">
+                            <div class="overlay-info">
+                                <span class="year-badge">2024</span>
+                                <span class="title-badge">Business Card</span>
+                            </div>
+                            <img src="https://images.unsplash.com/photo-1611532736597-de2d4265fba3?auto=format&fit=crop&w=800&q=80" alt="Business Card 3">
+                        </a>
+                        <!-- Business Card 4 -->
+                        <a href="business-card-4.html" class="graphic-card h-48 hover-trigger">
+                            <div class="overlay-info">
+                                <span class="year-badge">2024</span>
+                                <span class="title-badge">Business Card</span>
+                            </div>
+                            <img src="https://images.unsplash.com/photo-1572044162444-ad60f128bdea?auto=format&fit=crop&w=800&q=80" alt="Business Card 4">
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Brand Guidelines Subsection -->
+                <div class="mt-16">
+                    <p class="text-gray-400 text-lg mb-6 pl-5">Brand Guidelines</p>
+                    <div class="masonry-grid">
+                        <!-- Brand 1 - Tall -->
+                        <a href="brand-1.html" class="masonry-item tall hover-trigger">
+                            <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=600&q=80" alt="Brand 1">
+                        </a>
+                        <!-- Brand 2 -->
+                        <a href="brand-2.html" class="masonry-item hover-trigger">
+                            <img src="https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&fit=crop&w=600&q=80" alt="Brand 2">
+                        </a>
+                        <!-- Brand 3 -->
+                        <a href="brand-3.html" class="masonry-item hover-trigger">
+                            <img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=600&q=80" alt="Brand 3">
+                        </a>
+                        <!-- Brand 4 - Wide -->
+                        <a href="brand-4.html" class="masonry-item wide hover-trigger">
+                            <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=800&q=80" alt="Brand 4">
+                        </a>
+                        <!-- Brand 5 -->
+                        <a href="brand-5.html" class="masonry-item hover-trigger">
+                            <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80" alt="Brand 5">
+                        </a>
+                        <!-- Brand 6 - Tall -->
+                        <a href="brand-6.html" class="masonry-item tall hover-trigger">
+                            <img src="https://images.unsplash.com/photo-1634942537034-2531766767d1?auto=format&fit=crop&w=600&q=80" alt="Brand 6">
+                        </a>
+                        <!-- Brand 7 -->
+                        <a href="brand-7.html" class="masonry-item hover-trigger">
+                            <img src="https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?auto=format&fit=crop&w=600&q=80" alt="Brand 7">
+                        </a>
+                        <!-- Brand 8 -->
+                        <a href="brand-8.html" class="masonry-item hover-trigger">
+                            <img src="https://images.unsplash.com/photo-1618556450994-a6a128ef0d9d?auto=format&fit=crop&w=600&q=80" alt="Brand 8">
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Insta Posts Subsection -->
+                <div class="mt-16">
+                    <p class="text-gray-400 text-lg mb-6 pl-5">Insta Posts</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <!-- Insta Post 1 -->
+                        <a href="insta-1.html" class="graphic-card h-64 hover-trigger">
+                            <div class="overlay-info">
+                                <span class="year-badge">2025</span>
+                                <span class="title-badge">Insta Post</span>
+                            </div>
+                            <img src="https://images.unsplash.com/photo-1611162616475-46b635cb6868?auto=format&fit=crop&w=800&q=80" alt="Insta Post 1">
+                        </a>
+                        <!-- Insta Post 2 -->
+                        <a href="insta-2.html" class="graphic-card h-64 hover-trigger">
+                            <div class="overlay-info">
+                                <span class="year-badge">2025</span>
+                                <span class="title-badge">Insta Post</span>
+                            </div>
+                            <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1ad?auto=format&fit=crop&w=800&q=80" alt="Insta Post 2">
+                        </a>
+                        <!-- Insta Post 3 -->
+                        <a href="insta-3.html" class="graphic-card h-64 hover-trigger">
+                            <div class="overlay-info">
+                                <span class="year-badge">2024</span>
+                                <span class="title-badge">Insta Post</span>
+                            </div>
+                            <img src="https://images.unsplash.com/photo-1611162618071-b39a2ec055fb?auto=format&fit=crop&w=800&q=80" alt="Insta Post 3">
+                        </a>
+                        <!-- Insta Post 4 -->
+                        <a href="insta-4.html" class="graphic-card h-64 hover-trigger">
+                            <div class="overlay-info">
+                                <span class="year-badge">2024</span>
+                                <span class="title-badge">Insta Post</span>
+                            </div>
+                            <img src="https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?auto=format&fit=crop&w=800&q=80" alt="Insta Post 4">
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Video Edits Section -->
+            <section class="mb-20">
+                <h2 class="text-3xl font-bold mb-10 border-l-4 border-red-500 pl-4">Video Edits</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Video 1 -->
+                    <a href="video-1.html" class="video-card h-64 hover-trigger">
+                        <div class="overlay-info">
+                            <span class="year-badge">2025</span>
+                            <span class="title-badge">Video</span>
+                        </div>
+                        <video muted loop poster="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=800&q=80">
+                            <source src="https://assets.mixkit.co/videos/preview/mixkit-set-of-plateaus-702-large.mp4" type="video/mp4">
+                        </video>
+                        <div class="play-icon">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </a>
+                    <!-- Video 2 -->
+                    <a href="video-2.html" class="video-card h-64 hover-trigger">
+                        <div class="overlay-info">
+                            <span class="year-badge">2025</span>
+                            <span class="title-badge">Video</span>
+                        </div>
+                        <video muted loop poster="https://images.unsplash.com/photo-1536240478700-b869070f9279?auto=format&fit=crop&w=800&q=80">
+                            <source src="https://assets.mixkit.co/videos/preview/mixkit-aerial-view-of-city-traffic-at-night-11-large.mp4" type="video/mp4">
+                        </video>
+                        <div class="play-icon">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </a>
+                    <!-- Video 3 -->
+                    <a href="video-3.html" class="video-card h-64 hover-trigger">
+                        <div class="overlay-info">
+                            <span class="year-badge">2024</span>
+                            <span class="title-badge">Video</span>
+                        </div>
+                        <video muted loop poster="https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=800&q=80">
+                            <source src="https://assets.mixkit.co/videos/preview/mixkit-tree-with-yellow-flowers-1173-large.mp4" type="video/mp4">
+                        </video>
+                        <div class="play-icon">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </a>
+                    <!-- Video 4 -->
+                    <a href="video-4.html" class="video-card h-64 hover-trigger">
+                        <div class="overlay-info">
+                            <span class="year-badge">2024</span>
+                            <span class="title-badge">Video</span>
+                        </div>
+                        <video muted loop poster="https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=800&q=80">
+                            <source src="https://assets.mixkit.co/videos/preview/mixkit-top-aerial-shot-of-seashore-with-rocks-1097-large.mp4" type="video/mp4">
+                        </video>
+                        <div class="play-icon">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <footer class="mt-32 border-t border-white/10 pt-8 text-center text-gray-600 text-sm">
+                <p>&copy; 2025 PremVfx. Designed with passion.</p>
+            </footer>
+
+        </main>
+    </div>
+
+    <script>
+        // --- Custom Cursor Logic ---
+        const cursor = document.getElementById('cursor');
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        document.body.addEventListener('mouseover', (e) => {
+            if (e.target.closest('.hover-trigger') || e.target.tagName === 'A' || e.target.tagName === 'BUTTON' || e.target.closest('.project-card') || e.target.closest('.graphic-card') || e.target.closest('.video-card') || e.target.closest('.masonry-item')) {
+                cursor.classList.add('hovered');
+            } else {
+                cursor.classList.remove('hovered');
+            }
+        });
+
+        // --- Accordion Logic ---
+        function toggleAccordion(id) {
+            const content = document.getElementById(`acc-${id}`);
+            const icon = document.getElementById(`icon-${id}`);
+            
+            if (content.classList.contains('open')) {
+                content.classList.remove('open');
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                content.classList.add('open');
+                icon.style.transform = 'rotate(180deg)';
+            }
+        }
+
+        // --- Video Hover Play ---
+        const videoCards = document.querySelectorAll('.video-card');
+        videoCards.forEach(card => {
+            const video = card.querySelector('video');
+            card.addEventListener('mouseenter', () => {
+                video.play();
+            });
+            card.addEventListener('mouseleave', () => {
+                video.pause();
+                video.currentTime = 0;
+            });
+        });
+    </script>
+</body>
+</html>

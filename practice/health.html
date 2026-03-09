@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medi Life | Advanced Healthcare Solutions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'outfit': ['Outfit', 'sans-serif'],
+                        'jakarta': ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        'medical-blue': '#0f172a',
+                        'ocean': '#0ea5e9',
+                        'cyan-glow': '#06b6d4',
+                        'mint': '#14b8a6',
+                        'lavender': '#6366f1',
+                        'deep-teal': '#134e4a',
+                        'ice': '#e0f2fe',
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'gradient-x': 'gradient-x 15s ease infinite',
+                        'spin-slow': 'spin 12s linear infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        'gradient-x': {
+                            '0%, 100%': {
+                                'background-size': '200% 200%',
+                                'background-position': 'left center'
+                            },
+                            '50%': {
+                                'background-size': '200% 200%',
+                                'background-position': 'right center'
+                            },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+        }
+        
+        .glass-nav {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 50%, #6366f1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(-45deg, #0f172a, #1e3a5f, #134e4a, #0f172a);
+            background-size: 400% 400%;
+            animation: gradient-shift 15s ease infinite;
+        }
+        
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .blob {
+            position: absolute;
+            filter: blur(80px);
+            opacity: 0.4;
+            animation: move 20s infinite alternate;
+        }
+        
+        @keyframes move {
+            from { transform: translate(0, 0) scale(1); }
+            to { transform: translate(50px, -50px) scale(1.1); }
+        }
+        
+        .service-card {
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .service-card:hover {
+            transform: translateY(-10px) scale(1.02);
+        }
+        
+        .nav-link {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, #0ea5e9, #6366f1);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            transform: translateX(0);
+        }
+        
+        .btn-glow {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-glow::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn-glow:hover::before {
+            left: 100%;
+        }
+        
+        .counter {
+            font-variant-numeric: tabular-nums;
+        }
+        
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .floating-icon {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .grid-pattern {
+            background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.05) 1px, transparent 0);
+            background-size: 40px 40px;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-white antialiased">
+
+    <!-- Interactive Header -->
+    <header id="main-header" class="fixed w-full top-0 z-50 transition-all duration-500 transform -translate-y-full">
+        <nav class="glass-nav px-6 py-4">
+            <div class="max-w-7xl mx-auto flex items-center justify-between">
+                <!-- Logo -->
+                <div class="flex items-center gap-3 group cursor-pointer">
+                    <div class="relative w-12 h-12 rounded-xl bg-gradient-to-br from-ocean to-lavender flex items-center justify-center transform group-hover:rotate-12 transition-transform duration-300">
+                        <i class="fas fa-heartbeat text-2xl text-white animate-pulse"></i>
+                        <div class="absolute inset-0 rounded-xl bg-ocean opacity-0 group-hover:opacity-30 blur-xl transition-opacity"></div>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold font-outfit tracking-tight">
+                            <span class="text-white">Medi</span><span class="gradient-text">Life</span>
+                        </h1>
+                        <p class="text-xs text-slate-400 tracking-widest uppercase">Healthcare Excellence</p>
+                    </div>
+                </div>
+
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex items-center gap-8">
+                    <a href="#home" class="nav-link text-sm font-medium text-slate-300 hover:text-white transition-colors">Home</a>
+                    <a href="#services" class="nav-link text-sm font-medium text-slate-300 hover:text-white transition-colors">Services</a>
+                    <a href="#doctors" class="nav-link text-sm font-medium text-slate-300 hover:text-white transition-colors">Doctors</a>
+                    <a href="#technology" class="nav-link text-sm font-medium text-slate-300 hover:text-white transition-colors">Technology</a>
+                    <a href="#contact" class="nav-link text-sm font-medium text-slate-300 hover:text-white transition-colors">Contact</a>
+                </div>
+
+                <!-- CTA Buttons -->
+                <div class="hidden md:flex items-center gap-4">
+                    <button class="relative p-2 text-slate-300 hover:text-white transition-colors group">
+                        <i class="fas fa-search text-lg"></i>
+                        <div class="absolute inset-0 bg-white/10 rounded-lg scale-0 group-hover:scale-100 transition-transform"></div>
+                    </button>
+                    <button onclick="toggleAppointmentModal()" class="btn-glow px-6 py-2.5 bg-gradient-to-r from-ocean to-cyan-glow rounded-full text-sm font-semibold hover:shadow-lg hover:shadow-ocean/25 transition-all transform hover:scale-105">
+                        Book Appointment
+                    </button>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="md:hidden p-2 text-white" onclick="toggleMobileMenu()">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden md:hidden mt-4 pb-4 border-t border-white/10 pt-4">
+                <div class="flex flex-col gap-4">
+                    <a href="#home" class="text-slate-300 hover:text-white transition-colors">Home</a>
+                    <a href="#services" class="text-slate-300 hover:text-white transition-colors">Services</a>
+                    <a href="#doctors" class="text-slate-300 hover:text-white transition-colors">Doctors</a>
+                    <a href="#technology" class="text-slate-300 hover:text-white transition-colors">Technology</a>
+                    <a href="#contact" class="text-slate-300 hover:text-white transition-colors">Contact</a>
+                    <button onclick="toggleAppointmentModal()" class="w-full py-3 bg-gradient-to-r from-ocean to-cyan-glow rounded-lg text-sm font-semibold">
+                        Book Appointment
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative min-h-screen flex items-center overflow-hidden hero-gradient">
+        <!-- Animated Background Elements -->
+        <div class="blob bg-ocean w-96 h-96 rounded-full top-20 -left-20"></div>
+        <div class="blob bg-lavender w-80 h-80 rounded-full bottom-20 right-20 animation-delay-2000"></div>
+        <div class="blob bg-cyan-glow w-64 h-64 rounded-full top-1/2 left-1/2 animation-delay-4000"></div>
+        
+        <div class="absolute inset-0 grid-pattern opacity-30"></div>
+
+        <div class="relative max-w-7xl mx-auto px-6 py-32 grid lg:grid-cols-2 gap-12 items-center">
+            <div class="space-y-8 reveal active">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm">
+                    <span class="w-2 h-2 rounded-full bg-mint animate-pulse"></span>
+                    <span class="text-sm text-slate-300">24/7 Emergency Services Available</span>
+                </div>
+                
+                <h1 class="text-5xl lg:text-7xl font-bold font-outfit leading-tight">
+                    Your Health <br>
+                    <span class="gradient-text">Our Priority</span>
+                </h1>
+                
+                <p class="text-lg text-slate-300 max-w-lg leading-relaxed">
+                    Experience world-class healthcare with cutting-edge technology and compassionate medical professionals dedicated to your wellbeing.
+                </p>
+                
+                <div class="flex flex-wrap gap-4">
+                    <button onclick="scrollToSection('services')" class="group px-8 py-4 bg-gradient-to-r from-ocean to-cyan-glow rounded-full font-semibold hover:shadow-2xl hover:shadow-ocean/30 transition-all transform hover:scale-105 flex items-center gap-2">
+                        Explore Services
+                        <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                    </button>
+                    <button onclick="playVideo()" class="px-8 py-4 rounded-full border border-white/20 hover:bg-white/5 transition-all flex items-center gap-3 group">
+                        <div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-ocean transition-colors">
+                            <i class="fas fa-play text-sm"></i>
+                        </div>
+                        <span>Watch Video</span>
+                    </button>
+                </div>
+
+                <div class="flex items-center gap-8 pt-8 border-t border-white/10">
+                    <div>
+                        <div class="text-3xl font-bold gradient-text counter" data-target="50">0</div>
+                        <div class="text-sm text-slate-400">Expert Doctors</div>
+                    </div>
+                    <div class="w-px h-12 bg-white/10"></div>
+                    <div>
+                        <div class="text-3xl font-bold gradient-text counter" data-target="10000">0</div>
+                        <div class="text-sm text-slate-400">Patients Treated</div>
+                    </div>
+                    <div class="w-px h-12 bg-white/10"></div>
+                    <div>
+                        <div class="text-3xl font-bold gradient-text counter" data-target="25">0</div>
+                        <div class="text-sm text-slate-400">Years Experience</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="relative lg:h-[600px] flex items-center justify-center reveal active" style="transition-delay: 200ms;">
+                <div class="relative w-full max-w-lg">
+                    <!-- Main Image Container -->
+                    <div class="relative z-10 rounded-3xl overflow-hidden shadow-2xl shadow-ocean/20 transform hover:scale-[1.02] transition-transform duration-500">
+                        <img src="https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=800&auto=format&fit=crop" alt="Medical Professional" class="w-full h-auto object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent"></div>
+                    </div>
+                    
+                    <!-- Floating Cards -->
+                    <div class="absolute -left-8 top-20 glass-card p-4 rounded-2xl floating-icon z-20 shadow-xl">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 rounded-full bg-mint/20 flex items-center justify-center">
+                                <i class="fas fa-user-md text-mint text-xl"></i>
+                            </div>
+                            <div>
+                                <div class="text-sm font-semibold">Dr. Sarah Chen</div>
+                                <div class="text-xs text-slate-400">Cardiologist</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="absolute -right-4 bottom-32 glass-card p-4 rounded-2xl floating-icon z-20 shadow-xl" style="animation-delay: 1s;">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center">
+                                <i class="fas fa-check text-green-400"></i>
+                            </div>
+                            <div>
+                                <div class="text-sm font-semibold">Appointment</div>
+                                <div class="text-xs text-slate-400">Confirmed</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Decorative Ring -->
+                    <div class="absolute inset-0 border-2 border-ocean/20 rounded-3xl transform rotate-3 scale-105 -z-10"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <div class="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center pt-2">
+                <div class="w-1 h-2 bg-white rounded-full animate-pulse"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-24 relative bg-slate-900">
+        <div class="absolute inset-0 grid-pattern opacity-20"></div>
+        
+        <div class="max-w-7xl mx-auto px-6 relative">
+            <div class="text-center mb-16 reveal">
+                <span class="inline-block px-4 py-1 rounded-full bg-ocean/10 text-ocean text-sm font-medium mb-4">Our Services</span>
+                <h2 class="text-4xl lg:text-5xl font-bold font-outfit mb-4">Comprehensive <span class="gradient-text">Medical Care</span></h2>
+                <p class="text-slate-400 max-w-2xl mx-auto">We offer a wide range of medical services using the latest technology and techniques to ensure the best outcomes for our patients.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Service Card 1 -->
+                <div class="service-card glass-card p-8 rounded-2xl group cursor-pointer reveal">
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-ocean to-cyan-glow flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-ocean/20">
+                        <i class="fas fa-heartbeat text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 group-hover:text-ocean transition-colors">Cardiology</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed mb-4">Advanced cardiac care with state-of-the-art diagnostic and treatment facilities for all heart conditions.</p>
+                    <a href="#" class="inline-flex items-center gap-2 text-ocean text-sm font-medium group-hover:gap-3 transition-all">
+                        Learn more <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+
+                <!-- Service Card 2 -->
+                <div class="service-card glass-card p-8 rounded-2xl group cursor-pointer reveal" style="transition-delay: 100ms;">
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-lavender to-purple-500 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-lavender/20">
+                        <i class="fas fa-brain text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 group-hover:text-lavender transition-colors">Neurology</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed mb-4">Expert neurological care for disorders of the brain, spine, and nervous system with cutting-edge treatments.</p>
+                    <a href="#" class="inline-flex items-center gap-2 text-lavender text-sm font-medium group-hover:gap-3 transition-all">
+                        Learn more <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+
+                <!-- Service Card 3 -->
+                <div class="service-card glass-card p-8 rounded-2xl group cursor-pointer reveal" style="transition-delay: 200ms;">
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-mint to-teal-500 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-mint/20">
+                        <i class="fas fa-bone text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 group-hover:text-mint transition-colors">Orthopedics</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed mb-4">Comprehensive musculoskeletal care including joint replacement, sports medicine, and spine surgery.</p>
+                    <a href="#" class="inline-flex items-center gap-2 text-mint text-sm font-medium group-hover:gap-3 transition-all">
+                        Learn more <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+
+                <!-- Service Card 4 -->
+                <div class="service-card glass-card p-8 rounded-2xl group cursor-pointer reveal">
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-pink-500/20">
+                        <i class="fas fa-baby text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 group-hover:text-pink-400 transition-colors">Pediatrics</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed mb-4">Specialized healthcare for infants, children, and adolescents in a family-friendly environment.</p>
+                    <a href="#" class="inline-flex items-center gap-2 text-pink-400 text-sm font-medium group-hover:gap-3 transition-all">
+                        Learn more <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+
+                <!-- Service Card 5 -->
+                <div class="service-card glass-card p-8 rounded-2xl group cursor-pointer reveal" style="transition-delay: 100ms;">
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-amber-500/20">
+                        <i class="fas fa-eye text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 group-hover:text-amber-400 transition-colors">Ophthalmology</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed mb-4">Complete eye care services from routine exams to advanced surgical procedures for vision correction.</p>
+                    <a href="#" class="inline-flex items-center gap-2 text-amber-400 text-sm font-medium group-hover:gap-3 transition-all">
+                        Learn more <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+
+                <!-- Service Card 6 -->
+                <div class="service-card glass-card p-8 rounded-2xl group cursor-pointer reveal" style="transition-delay: 200ms;">
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-indigo-500/20">
+                        <i class="fas fa-flask text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 group-hover:text-indigo-400 transition-colors">Laboratory</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed mb-4">Accurate diagnostic testing with quick turnaround times using advanced laboratory technology.</p>
+                    <a href="#" class="inline-flex items-center gap-2 text-indigo-400 text-sm font-medium group-hover:gap-3 transition-all">
+                        Learn more <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technology Section -->
+    <section id="technology" class="py-24 relative overflow-hidden bg-slate-800/50">
+        <div class="absolute inset-0 bg-gradient-to-b from-slate-900 via-transparent to-slate-900"></div>
+        
+        <div class="max-w-7xl mx-auto px-6 relative">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div class="relative reveal">
+                    <div class="relative rounded-3xl overflow-hidden shadow-2xl">
+                        <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&auto=format&fit=crop" alt="Medical Technology" class="w-full h-auto transform hover:scale-105 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-tr from-ocean/20 to-transparent"></div>
+                    </div>
+                    
+                    <!-- Stats Overlay -->
+                    <div class="absolute -bottom-6 -right-6 glass-card p-6 rounded-2xl shadow-xl">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-full bg-ocean/20 flex items-center justify-center">
+                                <i class="fas fa-robot text-ocean text-xl"></i>
+                            </div>
+                            <div>
+                                <div class="text-2xl font-bold">AI-Powered</div>
+                                <div class="text-sm text-slate-400">Diagnostics</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-6 reveal">
+                    <span class="inline-block px-4 py-1 rounded-full bg-lavender/10 text-lavender text-sm font-medium">Advanced Technology</span>
+                    <h2 class="text-4xl lg:text-5xl font-bold font-outfit">Cutting-Edge <span class="gradient-text">Medical Innovation</span></h2>
+                    <p class="text-slate-400 leading-relaxed">We invest in the latest medical technology to provide accurate diagnoses and effective treatments. Our facilities are equipped with state-of-the-art imaging, robotic surgery systems, and AI-assisted diagnostic tools.</p>
+                    
+                    <div class="space-y-4 pt-4">
+                        <div class="flex items-start gap-4 group">
+                            <div class="w-8 h-8 rounded-lg bg-ocean/10 flex items-center justify-center flex-shrink-0 group-hover:bg-ocean/20 transition-colors">
+                                <i class="fas fa-check text-ocean text-sm"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-1">3D Imaging & Visualization</h4>
+                                <p class="text-sm text-slate-400">Advanced imaging technology for precise surgical planning and diagnosis.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start gap-4 group">
+                            <div class="w-8 h-8 rounded-lg bg-ocean/10 flex items-center justify-center flex-shrink-0 group-hover:bg-ocean/20 transition-colors">
+                                <i class="fas fa-check text-ocean text-sm"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-1">Robotic Surgery Systems</h4>
+                                <p class="text-sm text-slate-400">Minimally invasive procedures with enhanced precision and faster recovery.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start gap-4 group">
+                            <div class="w-8 h-8 rounded-lg bg-ocean/10 flex items-center justify-center flex-shrink-0 group-hover:bg-ocean/20 transition-colors">
+                                <i class="fas fa-check text-ocean text-sm"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-1">Telemedicine Platform</h4>
+                                <p class="text-sm text-slate-400">Remote consultations and monitoring for continuous patient care.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="mt-8 px-8 py-3 bg-gradient-to-r from-lavender to-ocean rounded-full font-semibold hover:shadow-lg hover:shadow-lavender/25 transition-all transform hover:scale-105">
+                        Explore Our Tech
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Doctors Section -->
+    <section id="doctors" class="py-24 relative bg-slate-900">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16 reveal">
+                <span class="inline-block px-4 py-1 rounded-full bg-mint/10 text-mint text-sm font-medium mb-4">Our Team</span>
+                <h2 class="text-4xl lg:text-5xl font-bold font-outfit mb-4">Meet Our <span class="gradient-text">Specialists</span></h2>
+                <p class="text-slate-400 max-w-2xl mx-auto">Our team of experienced doctors and medical professionals are dedicated to providing personalized care.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Doctor 1 -->
+                <div class="group relative reveal">
+                    <div class="relative overflow-hidden rounded-2xl bg-slate-800 aspect-[3/4]">
+                        <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop" alt="Doctor" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        
+                        <div class="absolute bottom-0 left-0 right-0 p-6 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                            <div class="flex gap-3 justify-center">
+                                <a href="#" class="w-10 h-10 rounded-full bg-white/10 backdrop-blur flex items-center justify-center hover:bg-ocean transition-colors">
+                                    <i class="fab fa-linkedin-in text-sm"></i>
+                                </a>
+                                <a href="#" class="w-10 h-10 rounded-full bg-white/10 backdrop-blur flex items-center justify-center hover:bg-ocean transition-colors">
+                                    <i class="fab fa-twitter text-sm"></i>
+                                </a>
+                                <a href="#" class="w-10 h-10 rounded-full bg-white/10 backdrop-blur flex items-center justify-center hover:bg-ocean transition-colors">
+                                    <i class="fas fa-envelope text-sm"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-center">
+                        <h3 class="font-bold text-lg group-hover:text-ocean transition-colors">Dr. Emily Watson</h3>
+                        <p class="text-sm text-slate-400">Cardiologist</p>
+                    </div>
+                </div>
+
+                <!-- Doctor 2 -->
+                <div class="group relative reveal" style="transition-delay: 100ms;">
+                    <div class="relative overflow-hidden rounded-2xl bg-slate-800 aspect-[3/4]">
+                        <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=400&auto=format&fit=crop" alt="Doctor" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        
+                        <div class="absolute bottom-0 left-0 right-0 p-6 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                            <div class="flex gap-3 justify-center">
+                                <a href="#" class="w-10 h-10 rounded-full bg-white/10 backdrop-blur flex items-center justify-center hover:bg-ocean transition-colors">
+                                    <i class="fab fa-linkedin-in text-sm"></i>
+                                </a>
+                                <a href="#" class="w-10 h-10 rounded-full bg-white/10 backdrop-blur flex items-center justify-center hover:bg-ocean transition-colors">
+                                    <i class="fab fa-twitter text-sm"></i>
+                                </a>
+                                <a href="#" class="w-10 h-10 rounded-full bg-white/10 backdrop-blur flex items-center justify-center hover:bg-ocean transition-colors">
+                                    <i class="fas fa-envelope text-sm"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-center">
+                        <h3 class="font-bold text-lg group-hover:text-ocean transition-colors">Dr. Michael Chen</h3>
+                        <p class="text-sm text-slate-400">Neurosurgeon</p>
+                    </div>
+                </div>
+
+                <!-- Doctor 3 -->
+                <div class="group relative reveal" style="transition-delay: 200ms;">
+                    <div class="relative overflow-hidden rounded-2xl bg-slate-800 aspect-[3/4]">
+                        <img src="https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=400&auto=format&fit=crop" alt="Doctor" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        
+                        <div class="absolute bottom-0 left-0 right-0 p-6 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                            <div class="flex gap-3 justify-center">
+                                <a href="#" class="w-10 h-10 rounded-full bg-white/10 backdrop-blur flex items-center justify-center hover:bg-ocean transition-colors">
+                                    <i class="fab fa-linkedin-in text-sm"></i>
+                                </a>
+                                <a href="#" class="w-10 h-10 rounded-full bg-white/10 backdrop-blur flex items-center justify-center hover:bg-ocean transition-colors">
+                                    <i class="fab fa-twitter text-sm"></i>
+                                </a>
+                                <a href="#" class="w-10 h-10 rounded-full bg-white/10 backdrop-blur flex items-center justify-center hover:bg-ocean transition-colors">
+                                    <i class="fas fa-envelope text-sm"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-center">
+                        <h3 class="font-bold text-lg group-hover:text-ocean transition-colors">Dr. Sarah Johnson</h3>
+                        <p class="text-sm text-slate-400">Pediatrician</p>
+                    </div>
+                </div>
+
+                <!-- Doctor 4 -->
+                <div class="group relative reveal" style="transition-delay: 300ms;">
+                    <div class="relative overflow-hidden rounded-2xl bg-slate-800 aspect-[3/4]">
+                        <img src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=400&auto=format&fit=crop" alt="Doctor" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        
+                        <div class="absolute bottom-0 left-0 right-0 p-6 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                            <div class="flex gap-3 justify-center">
+                                <a href="#" class="w-10 h-10 rounded-full bg-white/10 backdrop-blur flex items-center justify-center hover:bg-ocean transition-colors">
+                                    <i class="fab fa-linkedin-in text-sm"></i>
+                                </a>
+                                <a href="#" class="w-10 h-10 rounded-full bg-white/10 backdrop-blur flex items-center justify-center hover:bg-ocean transition-colors">
+                                    <i class="fab fa-twitter text-sm"></i>
+                                </a>
+                                <a href="#" class="w-10 h-10 rounded-full bg-white/10 backdrop-blur flex items-center justify-center hover:bg-ocean transition-colors">
+                                    <i class="fas fa-envelope text-sm"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-center">
+                        <h3 class="font-bold text-lg group-hover:text-ocean transition-colors">Dr. James Wilson</h3>
+                        <p class="text-sm text-slate-400">Orthopedic Surgeon</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-24 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-r from-ocean/20 to-lavender/20"></div>
+        <div class="absolute inset-0 backdrop-blur-3xl"></div>
+        
+        <div class="max-w-4xl mx-auto px-6 text-center relative reveal">
+            <h2 class="text-4xl lg:text-5xl font-bold font-outfit mb-6">Ready to Prioritize Your Health?</h2>
+            <p class="text-lg text-slate-300 mb-8">Schedule a consultation with our expert medical team today and take the first step towards better health.</p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <button onclick="toggleAppointmentModal()" class="px-8 py-4 bg-gradient-to-r from-ocean to-cyan-glow rounded-full font-bold text-lg hover:shadow-2xl hover:shadow-ocean/30 transition-all transform hover:scale-105">
+                    Book Appointment Now
+                </button>
+                <button class="px-8 py-4 rounded-full border-2 border-white/20 hover:bg-white/5 transition-all font-semibold">
+                    Contact Us
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Footer -->
+    <footer id="contact" class="relative bg-slate-950 pt-24 pb-8 overflow-hidden">
+        <!-- Animated Background -->
+        <div class="absolute inset-0 overflow-hidden">
+            <div class="absolute -top-40 -right-40 w-80 h-80 bg-ocean/10 rounded-full blur-3xl animate-pulse-slow"></div>
+            <div class="absolute -bottom-20 -left-20 w-96 h-96 bg-lavender/10 rounded-full blur-3xl animate-pulse-slow" style="animation-delay: 2s;"></div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-6 relative">
+            <div class="grid lg:grid-cols-4 gap-12 mb-16">
+                <!-- Brand Column -->
+                <div class="lg:col-span-1 space-y-6 reveal">
+                    <div class="flex items-center gap-3 group cursor-pointer" onclick="scrollToSection('home')">
+                        <div class="relative w-12 h-12 rounded-xl bg-gradient-to-br from-ocean to-lavender flex items-center justify-center transform group-hover:rotate-12 transition-transform duration-300">
+                            <i class="fas fa-heartbeat text-2xl text-white"></i>
+                        </div>
+                        <div>
+                            <h1 class="text-2xl font-bold font-outfit">
+                                <span class="text-white">Medi</span><span class="gradient-text">Life</span>
+                            </h1>
+                        </div>
+                    </div>
+                    <p class="text-slate-400 text-sm leading-relaxed">Providing exceptional healthcare services with compassion and cutting-edge technology since 1999.</p>
+                    
+                    <div class="flex gap-3">
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-ocean hover:scale-110 transition-all group">
+                            <i class="fab fa-facebook-f text-slate-400 group-hover:text-white transition-colors"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-ocean hover:scale-110 transition-all group">
+                            <i class="fab fa-twitter text-slate-400 group-hover:text-white transition-colors"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-ocean hover:scale-110 transition-all group">
+                            <i class="fab fa-instagram text-slate-400 group-hover:text-white transition-colors"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-ocean hover:scale-110 transition-all group">
+                            <i class="fab fa-linkedin-in text-slate-400 group-hover:text-white transition-colors"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="reveal" style="transition-delay: 100ms;">
+                    <h3 class="text-lg font-bold mb-6 relative inline-block">
+                        Quick Links
+                        <span class="absolute -bottom-2 left-0 w-12 h-0.5 bg-gradient-to-r from-ocean to-lavender"></span>
+                    </h3>
+                    <ul class="space-y-3">
+                        <li><a href="#home" class="text-slate-400 hover:text-ocean hover:translate-x-1 transition-all inline-block text-sm">Home</a></li>
+                        <li><a href="#services" class="text-slate-400 hover:text-ocean hover:translate-x-1 transition-all inline-block text-sm">Services</a></li>
+                        <li><a href="#doctors" class="text-slate-400 hover:text-ocean hover:translate-x-1 transition-all inline-block text-sm">Our Doctors</a></li>
+                        <li><a href="#technology" class="text-slate-400 hover:text-ocean hover:translate-x-1 transition-all inline-block text-sm">Technology</a></li>
+                        <li><a href="#" class="text-slate-400 hover:text-ocean hover:translate-x-1 transition-all inline-block text-sm">About Us</a></li>
+                    </ul>
+                </div>
+
+                <!-- Services -->
+                <div class="reveal" style="transition-delay: 200ms;">
+                    <h3 class="text-lg font-bold mb-6 relative inline-block">
+                        Services
+                        <span class="absolute -bottom-2 left-0 w-12 h-0.5 bg-gradient-to-r from-ocean to-lavender"></span>
+                    </h3>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-slate-400 hover:text-ocean hover:translate-x-1 transition-all inline-block text-sm">Cardiology</a></li>
+                        <li><a href="#" class="text-slate-400 hover:text-ocean hover:translate-x-1 transition-all inline-block text-sm">Neurology</a></li>
+                        <li><a href="#" class="text-slate-400 hover:text-ocean hover:translate-x-1 transition-all inline-block text-sm">Orthopedics</a></li>
+                        <li><a href="#" class="text-slate-400 hover:text-ocean hover:translate-x-1 transition-all inline-block text-sm">Pediatrics</a></li>
+                        <li><a href="#" class="text-slate-400 hover:text-ocean hover:translate-x-1 transition-all inline-block text-sm">Emergency Care</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="reveal" style="transition-delay: 300ms;">
+                    <h3 class="text-lg font-bold mb-6 relative inline-block">
+                        Contact Us
+                        <span class="absolute -bottom-2 left-0 w-12 h-0.5 bg-gradient-to-r from-ocean to-lavender"></span>
+                    </h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start gap-3 group">
+                            <div class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center flex-shrink-0 group-hover:bg-ocean/20 transition-colors">
+                                <i class="fas fa-map-marker-alt text-ocean text-sm"></i>
+                            </div>
+                            <span class="text-slate-400 text-sm">3-363/9, anandnagar colony Road,Khairathabad,500004,Telangana</span>
+                        </li>
+                        <li class="flex items-center gap-3 group">
+                            <div class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center flex-shrink-0 group-hover:bg-ocean/20 transition-colors">
+                                <i class="fas fa-phone text-ocean text-sm"></i>
+                            </div>
+                            <span class="text-slate-400 text-sm">+91 889 713 3883</span>
+                        </li>
+                        <li class="flex items-center gap-3 group">
+                            <div class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center flex-shrink-0 group-hover:bg-ocean/20 transition-colors">
+                                <i class="fas fa-envelope text-ocean text-sm"></i>
+                            </div>
+                            <span class="text-slate-400 text-sm">contact@medilife.com</span>
+                        </li>
+                        <li class="flex items-center gap-3 group">
+                            <div class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center flex-shrink-0 group-hover:bg-ocean/20 transition-colors">
+                                <i class="fas fa-clock text-ocean text-sm"></i>
+                            </div>
+                            <span class="text-slate-400 text-sm">24/7 Emergency Services</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Newsletter -->
+            <div class="glass-card rounded-2xl p-8 mb-12 reveal">
+                <div class="grid md:grid-cols-2 gap-6 items-center">
+                    <div>
+                        <h3 class="text-xl font-bold mb-2">Subscribe to Our Newsletter</h3>
+                        <p class="text-slate-400 text-sm">Get the latest health tips and medical news delivered to your inbox.</p>
+                    </div>
+                    <form class="flex gap-3" onsubmit="handleNewsletterSubmit(event)">
+                        <input type="email" placeholder="Enter your email" class="flex-1 px-4 py-3 rounded-full bg-white/5 border border-white/10 focus:border-ocean focus:outline-none focus:ring-1 focus:ring-ocean text-sm transition-all" required>
+                        <button type="submit" class="px-6 py-3 bg-gradient-to-r from-ocean to-cyan-glow rounded-full font-semibold hover:shadow-lg hover:shadow-ocean/25 transition-all transform hover:scale-105 whitespace-nowrap">
+                            Join
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Bottom Bar -->
+            <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-slate-500 text-sm">&copy; 2026 Medi Life. All rights reserved.</p>
+                <div class="flex gap-6 text-sm">
+                    <a href="#" class="text-slate-500 hover:text-ocean transition-colors">Privacy Policy</a>
+                    <a href="#" class="text-slate-500 hover:text-ocean transition-colors">Terms of Service</a>
+                    <a href="#" class="text-slate-500 hover:text-ocean transition-colors">Cookie Policy</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Back to Top Button -->
+        <button id="back-to-top" onclick="scrollToSection('home')" class="fixed bottom-8 right-8 w-12 h-12 rounded-full bg-gradient-to-r from-ocean to-cyan-glow flex items-center justify-center shadow-lg shadow-ocean/30 opacity-0 invisible transition-all duration-300 hover:scale-110 z-50">
+            <i class="fas fa-arrow-up text-white"></i>
+        </button>
+    </footer>
+
+    <!-- Appointment Modal -->
+    <div id="appointment-modal" class="fixed inset-0 z-[60] hidden">
+        <div class="absolute inset-0 bg-slate-900/90 backdrop-blur-sm" onclick="toggleAppointmentModal()"></div>
+        <div class="absolute inset-0 flex items-center justify-center p-4">
+            <div class="bg-slate-800 rounded-3xl p-8 max-w-md w-full border border-white/10 shadow-2xl transform scale-95 opacity-0 transition-all duration-300" id="modal-content">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-2xl font-bold font-outfit">Book Appointment</h3>
+                    <button onclick="toggleAppointmentModal()" class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <form class="space-y-4" onsubmit="handleAppointmentSubmit(event)">
+                    <div>
+                        <label class="block text-sm text-slate-400 mb-1">Full Name</label>
+                        <input type="text" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 focus:border-ocean focus:outline-none transition-colors" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm text-slate-400 mb-1">Email</label>
+                        <input type="email" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 focus:border-ocean focus:outline-none transition-colors" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm text-slate-400 mb-1">Phone</label>
+                        <input type="tel" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 focus:border-ocean focus:outline-none transition-colors" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm text-slate-400 mb-1">Department</label>
+                        <select class="w-full h-10 px-4 py-3 rounded-lg bg-black border border-white focus:border-ocean focus:outline-none transition-colors text-slate-300">
+                            <option value="">Select Department</option>
+                            <option value="cardiology">Cardiology</option>
+                            <option value="neurology">Neurology</option>
+                            <option value="orthopedics">Orthopedics</option>
+                            <option value="pediatrics">Pediatrics</option>
+                            <option value="ophthalmology">Ophthalmology</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm text-slate-400 mb-1">Preferred Date</label>
+                        <input type="date" class="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 focus:border-ocean focus:outline-none transition-colors text-slate-300" required>
+                    </div>
+                    <button type="submit" class="w-full py-4 bg-gradient-to-r from-ocean to-cyan-glow rounded-lg font-bold hover:shadow-lg hover:shadow-ocean/25 transition-all transform hover:scale-[1.02] mt-4">
+                        Confirm Booking
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Header scroll behavior
+        let lastScroll = 0;
+        const header = document.getElementById('main-header');
+        const backToTop = document.getElementById('back-to-top');
+
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            
+            // Show/hide header
+            if (currentScroll > 100) {
+                header.classList.remove('-translate-y-full');
+            } else {
+                header.classList.add('-translate-y-full');
+            }
+            
+            // Show/hide back to top
+            if (currentScroll > 500) {
+                backToTop.classList.remove('opacity-0', 'invisible');
+                backToTop.classList.add('opacity-100', 'visible');
+            } else {
+                backToTop.classList.add('opacity-0', 'invisible');
+                backToTop.classList.remove('opacity-100', 'visible');
+            }
+            
+            lastScroll = currentScroll;
+        });
+
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Smooth scroll to section
+        function scrollToSection(sectionId) {
+            const element = document.getElementById(sectionId);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // Appointment Modal
+        function toggleAppointmentModal() {
+            const modal = document.getElementById('appointment-modal');
+            const content = document.getElementById('modal-content');
+            
+            if (modal.classList.contains('hidden')) {
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    content.classList.remove('scale-95', 'opacity-0');
+                    content.classList.add('scale-100', 'opacity-100');
+                }, 10);
+            } else {
+                content.classList.remove('scale-100', 'opacity-100');
+                content.classList.add('scale-95', 'opacity-0');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                }, 300);
+            }
+        }
+
+        // Form handlers
+        function handleAppointmentSubmit(e) {
+            e.preventDefault();
+            alert('Appointment request submitted successfully! We will contact you shortly.');
+            toggleAppointmentModal();
+        }
+
+        function handleNewsletterSubmit(e) {
+            e.preventDefault();
+            alert('Thank you for subscribing to our newsletter!');
+            e.target.reset();
+        }
+
+        // Play video placeholder
+        function playVideo() {
+            alert('Video modal would open here with promotional content');
+        }
+
+        // Intersection Observer for reveal animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    
+                    // Animate counters if present
+                    const counters = entry.target.querySelectorAll('.counter');
+                    counters.forEach(counter => {
+                        const target = parseInt(counter.getAttribute('data-target'));
+                        animateCounter(counter, target);
+                    });
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // Counter animation
+        function animateCounter(element, target) {
+            let current = 0;
+            const increment = target / 50;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    element.textContent = target.toLocaleString() + '+';
+                    clearInterval(timer);
+                } else {
+                    element.textContent = Math.floor(current).toLocaleString();
+                }
+            }, 30);
+        }
+
+        // Add smooth parallax effect to blobs
+        document.addEventListener('mousemove', (e) => {
+            const blobs = document.querySelectorAll('.blob');
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            
+            blobs.forEach((blob, index) => {
+                const speed = (index + 1) * 20;
+                const xOffset = (window.innerWidth / 2 - e.clientX) / speed;
+                const yOffset = (window.innerHeight / 2 - e.clientY) / speed;
+                blob.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
+            });
+        });
+
+        // Initialize header animation on load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                header.classList.remove('-translate-y-full');
+            }, 500);
+        });
+    </script>
+</body>
+</html>
